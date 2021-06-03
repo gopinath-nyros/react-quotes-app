@@ -1,4 +1,4 @@
-import React, { useRef, useState, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 
 import { Prompt } from "react-router-dom";
 import Card from "../UI/Card";
@@ -8,18 +8,61 @@ import classes from "./QuoteForm.module.css";
 const QuoteForm = (props) => {
   const [isEntering, setIsEntering] = useState(false);
 
-  const authorInputRef = useRef();
-  const textInputRef = useRef();
+  const [isAuthor, setIsAuthor] = useState("");
+  const [isText, setIsText] = useState("");
+
+  const [isAuthorValid, setIsAuthorValid] = useState(false);
+  const [isTextValid, setIsTextValid] = useState(false);
+
+  const [isAuthorTouched, setIsAuthorTouched] = useState(false);
+  const [isTextTouched, setIsTextTouched] = useState(false);
+
+  const authorNameChangeHandler = (event) => {
+    setIsAuthor(event.target.value);
+    if (event.target.value.trim() !== "") {
+      setIsAuthorValid(true);
+    }
+  };
+
+  const authorBlurHandler = () => {
+    setIsAuthorTouched(true);
+    if (isAuthor.trim() === "") {
+      setIsAuthorValid(false);
+    }
+  };
+
+  const textChangeHandler = (event) => {
+    setIsText(event.target.value);
+    if (event.target.value.trim() !== "") {
+      setIsTextValid(true);
+    }
+  };
+
+  const textBlurHandler = () => {
+    setIsTextTouched(true);
+    if (isText.trim() === "") {
+      setIsTextValid(false);
+    }
+  };
 
   function submitFormHandler(event) {
     event.preventDefault();
-
-    const enteredAuthor = authorInputRef.current.value;
-    const enteredText = textInputRef.current.value;
-
-    // optional: Could validate here
-
-    props.onAddQuote({ author: enteredAuthor, text: enteredText });
+    setIsAuthorTouched(true);
+    setIsTextTouched(true);
+    if (isAuthor.trim() === "") {
+      setIsAuthorValid(false);
+      return;
+    }
+    if (isText.trim() === "") {
+      setIsTextValid(false);
+      return;
+    }
+    setIsAuthorValid(true);
+    setIsTextValid(true);
+    console.log(isAuthor, isText);
+    props.onAddQuote({ author: isAuthor, text: isText });
+    setIsAuthor("");
+    setIsText("");
   }
 
   const focusHandler = () => {
@@ -52,11 +95,29 @@ const QuoteForm = (props) => {
 
           <div className={classes.control}>
             <label htmlFor='author'>Author</label>
-            <input type='text' id='author' ref={authorInputRef} />
+            <input
+              type='text'
+              id='author'
+              value={isAuthor}
+              onBlur={authorBlurHandler}
+              onChange={authorNameChangeHandler}
+            />
+            {isAuthorTouched && !isAuthorValid && (
+              <span className={classes.error}>please enter author</span>
+            )}
           </div>
           <div className={classes.control}>
             <label htmlFor='text'>Text</label>
-            <textarea id='text' rows='5' ref={textInputRef}></textarea>
+            <textarea
+              id='text'
+              rows='5'
+              value={isText}
+              onBlur={textBlurHandler}
+              onChange={textChangeHandler}
+            ></textarea>
+            {isTextTouched && !isTextValid && (
+              <span className={classes.error}>please enter text</span>
+            )}
           </div>
           <div className={classes.actions}>
             <button className='btn' onClick={finishedEntering}>

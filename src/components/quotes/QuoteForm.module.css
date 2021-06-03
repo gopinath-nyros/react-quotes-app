@@ -47,3 +47,10 @@
 .actions button {
   font-size: 1.25rem;
 }
+
+.error {
+  font-size: 1rem;
+  color: red;
+  margin-top: 20px;
+  margin-bottom: 2px;
+}

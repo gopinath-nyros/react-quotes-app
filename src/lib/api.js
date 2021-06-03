@@ -19,7 +19,7 @@ export async function getAllQuotes() {
 
     transformedQuotes.push(quoteObj);
   }
-  console.log(transformedQuotes);
+  // console.log(transformedQuotes);
   return transformedQuotes;
 }
 
@@ -51,6 +51,29 @@ export async function addQuote(quoteData) {
 
   if (!response.ok) {
     throw new Error(data.message || "Could not create quote.");
+  }
+  return null;
+}
+
+// delete quote
+export async function deleteQuote(quoteData) {
+  console.log("delete request...");
+  console.log(quoteData);
+  console.log(quoteData[0].id);
+  const response = await fetch(
+    `${FIREBASE_DOMAIN}quotes/${quoteData[0].id}.json`,
+    {
+      method: "DELETE",
+      body: JSON.stringify(quoteData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Could not delete quote.");
   }
 
   return null;

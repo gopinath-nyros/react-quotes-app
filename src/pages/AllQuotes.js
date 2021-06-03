@@ -6,14 +6,14 @@ import useHttp from "../hooks/use-http";
 import { getAllQuotes } from "../lib/api";
 
 const AllQuotes = () => {
-  console.log("inside component");
+  // console.log("inside component");
   const { sendRequest, status, data: loadedQuotes, error } = useHttp(
     getAllQuotes,
     true
   );
 
   useEffect(() => {
-    console.log("inside effect function...");
+    // console.log("inside effect function...");
     sendRequest();
   }, [sendRequest]);
 
